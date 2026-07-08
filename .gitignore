@@ -1,4 +1,5 @@
 .env
 __pycache__/
 *.pyc
-instance/
+instance/static/pdfs/ 
+handwerker.db 
