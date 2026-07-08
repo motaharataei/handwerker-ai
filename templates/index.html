@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HandwerkerAI — Angebote & Rechnungen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="app">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">⚡ HandwerkerAI</div>
+            <p class="tagline">Angebote & Rechnungen in Sekunden</p>
+
+            <div class="sidebar-section">
+                <p class="sidebar-label">DOKUMENTE</p>
+                <div id="doc-list">
+                    <!-- Documents will appear here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main">
+
+            <!-- Header -->
+            <div class="header">
+                <h1>Neues Dokument erstellen</h1>
+                <p>Beschreibe den Job — KI erledigt den Rest</p>
+            </div>
+
+            <!-- Form -->
+            <div class="form-container">
+
+                <!-- Document Type -->
+                <div class="type-selector">
+                    <button class="type-btn active" onclick="selectType('angebot', this)">
+                        📋 Angebot
+                    </button>
+                    <button class="type-btn" onclick="selectType('rechnung', this)">
+                        🧾 Rechnung
+                    </button>
+                </div>
+
+                <!-- Customer Info -->
+                <div class="form-section">
+                    <h3>Kundeninformationen</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Kundenname *</label>
+                            <input type="text" id="customer_name" placeholder="Max Mustermann">
+                        </div>
+                        <div class="form-group">
+                            <label>Adresse *</label>
+                            <input type="text" id="customer_address" placeholder="Musterstraße 1, 10115 Berlin">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Info -->
+                <div class="form-section">
+                    <h3>Jobdetails</h3>
+                    <div class="form-group">
+                        <label>Jobbeschreibung *</label>
+                        <textarea id="job_description" rows="3" 
+                            placeholder="z.B. Heizung repariert, undichtes Rohr im Keller ausgetauscht, neue Dichtungen eingebaut"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Verwendete Materialien</label>
+                        <input type="text" id="materials" 
+                            placeholder="z.B. Kupferrohr 2m, 3x Dichtungsringe, Lötzinn">
+                    </div>
+                </div>
+
+                <!-- Costs -->
+                <div class="form-section">
+                    <h3>Kosten</h3>
+                    <div class="form-row three-col">
+                        <div class="form-group">
+                            <label>Arbeitsstunden *</label>
+                            <input type="number" id="hours" value="2" min="0.5" step="0.5">
+                        </div>
+                        <div class="form-group">
+                            <label>Stundensatz (€) *</label>
+                            <input type="number" id="hourly_rate" value="65" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Materialkosten (€)</label>
+                            <input type="number" id="material_cost" value="0" min="0">
+                        </div>
+                    </div>
+
+                    <!-- Live cost preview -->
+                    <div class="cost-preview">
+                        <div class="cost-row">
+                            <span>Arbeitskosten</span>
+                            <span id="preview-labor">€ 130.00</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Material</span>
+                            <span id="preview-material">€ 0.00</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Netto</span>
+                            <span id="preview-net">€ 130.00</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>MwSt. 19%</span>
+                            <span id="preview-vat">€ 24.70</span>
+                        </div>
+                        <div class="cost-row total">
+                            <span>Gesamt Brutto</span>
+                            <span id="preview-gross">€ 154.70</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <button class="generate-btn" id="generate-btn" onclick="generateDocument()">
+                    ⚡ Dokument generieren
+                </button>
+
+            </div>
+
+            <!-- Result -->
+            <div class="result" id="result" style="display:none;">
+                <div class="result-header">
+                    <h3>✅ Dokument erstellt!</h3>
+                </div>
+                <div class="result-content">
+                    <p class="result-label">KI-Leistungsbeschreibung:</p>
+                    <p id="result-text"></p>
+                </div>
+                <div class="result-actions">
+                    <a id="download-btn" href="#" class="download-btn">
+                        ⬇️ PDF herunterladen
+                    </a>
+                    <button class="new-btn" onclick="resetForm()">
+                        + Neues Dokument
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
