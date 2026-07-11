@@ -19,7 +19,22 @@ def init_db():
             vat REAL,
             total_gross REAL,
             ai_content TEXT,
+            invoice_number TEXT,
             created_at TEXT NOT NULL
+        )
+    ''')
+    
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS company (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            address TEXT,
+            phone TEXT,
+            email TEXT,
+            tax_number TEXT,
+            iban TEXT,
+            bic TEXT,
+            updated_at TEXT
         )
     ''')
     
@@ -35,8 +50,8 @@ def save_document(data):
             type, customer_name, customer_address,
             job_description, materials, hours,
             hourly_rate, total_net, vat, total_gross,
-            ai_content, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ai_content, invoice_number, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (
         data['type'],
         data['customer_name'],
@@ -49,6 +64,7 @@ def save_document(data):
         data['vat'],
         data['total_gross'],
         data['ai_content'],
+        data['invoice_number'],
         datetime.now().isoformat()
     ))
     
@@ -56,6 +72,62 @@ def save_document(data):
     conn.commit()
     conn.close()
     return doc_id
+
+def get_next_invoice_number():
+    conn = sqlite3.connect('handwerker.db')
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM documents WHERE type = 'rechnung'")
+    count = c.fetchone()[0]
+    conn.close()
+    year = datetime.now().year
+    return f"RE-{year}-{(count + 1):04d}"
+
+def get_next_offer_number():
+    conn = sqlite3.connect('handwerker.db')
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM documents WHERE type = 'angebot'")
+    count = c.fetchone()[0]
+    conn.close()
+    year = datetime.now().year
+    return f"AN-{year}-{(count + 1):04d}"
+
+def save_company(data):
+    conn = sqlite3.connect('handwerker.db')
+    c = conn.cursor()
+    c.execute('DELETE FROM company')
+    c.execute('''
+        INSERT INTO company (name, address, phone, email, tax_number, iban, bic, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (
+        data['name'],
+        data['address'],
+        data['phone'],
+        data['email'],
+        data['tax_number'],
+        data['iban'],
+        data['bic'],
+        datetime.now().isoformat()
+    ))
+    conn.commit()
+    conn.close()
+
+def get_company():
+    conn = sqlite3.connect('handwerker.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM company LIMIT 1')
+    row = c.fetchone()
+    conn.close()
+    if row:
+        return {
+            'name': row[1],
+            'address': row[2],
+            'phone': row[3],
+            'email': row[4],
+            'tax_number': row[5],
+            'iban': row[6],
+            'bic': row[7]
+        }
+    return {}
 
 def get_all_documents():
     conn = sqlite3.connect('handwerker.db')
