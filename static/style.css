@@ -630,3 +630,84 @@ textarea {
         font-size: 1.3rem;
     }
 }
+
+/* ── MOBILE HEADER ───────────────────────────────── */
+.mobile-header {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        background: #111111;
+        border-bottom: 1px solid #1e1e1e;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+        height: 56px;
+    }
+
+    .logo-mobile {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+    .hamburger {
+        background: transparent;
+        border: none;
+        color: #e8e8e8;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 6px;
+        transition: background 0.15s;
+    }
+
+    .hamburger:hover {
+        background: #1a1a1a;
+    }
+
+    /* Sidebar becomes slide-in drawer */
+    .sidebar {
+        display: flex !important;
+        position: fixed;
+        top: 0;
+        left: -280px;
+        width: 280px;
+        height: 100vh;
+        z-index: 300;
+        transition: left 0.3s ease;
+        padding-top: 70px;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    /* Dark overlay behind sidebar */
+    .menu-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 250;
+    }
+
+    .menu-overlay.visible {
+        display: block;
+    }
+
+    /* Push main content down for mobile header */
+    .main {
+        padding: 76px 16px 80px 16px;
+    }
+}

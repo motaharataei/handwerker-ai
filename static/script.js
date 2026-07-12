@@ -1,3 +1,11 @@
+// Hamburger menu toggle
+function toggleMenu() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('menu-overlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('visible');
+}
+
 let selectedType = 'angebot';
 let currentDocId = null;
 
