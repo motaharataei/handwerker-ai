@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HandwerkerAI — Preise</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .pricing-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background: #0a0a0a;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .pricing-header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+        }
+
+        .pricing-header p {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .pricing-cards {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .pricing-card {
+            background: #111111;
+            border: 1px solid #1e1e1e;
+            border-radius: 16px;
+            padding: 32px;
+            flex: 1;
+            min-width: 280px;
+            max-width: 340px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .pricing-card.featured {
+            border-color: #ffffff;
+        }
+
+        .plan-badge {
+            font-size: 0.72rem;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .plan-badge.pro {
+            color: #4caf50;
+        }
+
+        .plan-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .plan-price {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .plan-price .amount {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        .plan-price .period {
+            font-size: 0.88rem;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        .plan-features {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .plan-feature {
+            font-size: 0.9rem;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .plan-feature .check {
+            color: #4caf50;
+            font-size: 0.9rem;
+        }
+
+        .plan-feature .cross {
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .plan-btn {
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .plan-btn.free {
+            background: transparent;
+            border: 1px solid #2a2a2a;
+            color: #888;
+        }
+
+        .plan-btn.free:hover {
+            background: #1a1a1a;
+            color: #e8e8e8;
+        }
+
+        .plan-btn.pro {
+            background: #ffffff;
+            border: none;
+            color: #000000;
+        }
+
+        .plan-btn.pro:hover {
+            background: #e0e0e0;
+        }
+
+        .back-link {
+            margin-top: 32px;
+            font-size: 0.85rem;
+            color: #444;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .back-link:hover {
+            color: #e8e8e8;
+        }
+
+        @media (max-width: 768px) {
+            .pricing-header h1 {
+                font-size: 1.6rem;
+            }
+
+            .pricing-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .pricing-card {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pricing-page">
+
+        <div class="pricing-header">
+            <h1>⚡ HandwerkerAI</h1>
+            <p>Einfache Preise. Keine versteckten Kosten.</p>
+        </div>
+
+        <div class="pricing-cards">
+
+            <!-- Free Plan -->
+            <div class="pricing-card">
+                <div>
+                    <div class="plan-badge">Kostenlos</div>
+                    <div class="plan-name">Starter</div>
+                </div>
+                <div class="plan-price">
+                    <span class="amount">€0</span>
+                    <span class="period">/Monat</span>
+                </div>
+                <div class="plan-features">
+                    <div class="plan-feature">
+                        <span class="check">✓</span> 5 Dokumente pro Monat
+                    </div>
+                    <div class="plan-feature">
+                        <span class="check">✓</span> KI-Leistungsbeschreibung
+                    </div>
+                    <div class="plan-feature">
+                        <span class="check">✓</span> PDF Export
+                    </div>
+                    <div class="plan-feature">
+                        <span class="check">✓</span> Spracheingabe
+                    </div>
+                    <div class="plan-feature">
+                        <span class="cross">✗</span> Unbegrenzte Dokumente
+                    </div>
+                    <div class="plan-feature">
+                        <span class="cross">✗</span> E-Mail Versand
+                    </div>
+                    <div class="plan-feature">
+                        <span class="cross">✗</span> Firmenlogo
+                    </div>
+                </div>
+                <a href="/" class="plan-btn free">Kostenlos starten</a>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="pricing-card featured">
+                <div>
+                    <div class="plan-badge pro">⭐ Empfohlen</div>
+                    <div class="plan-name">Pro</div>
+                </div>
+                <div class="plan-price">
+                    <span class="amount">€15</span>
+                    <span class="period">/Monat</span>
+                </div>
+                <div class="plan-features">
+                    <div class="plan-feature">
+                        <span class="check">✓</span> Unbegrenzte Dokumente
+                    </div>
+                    <div class="plan-feature">
+                        <span class="check">✓</span> KI-Leistungsbeschreibung
+                    </div>
+                    <div class="plan-feature">
+                        <span class="check">✓</span> PDF Export
+                    </div>
+                    <div class="plan-feature">
+                        <span class="check">✓</span> Spracheingabe
+                    </div>
+                    <div class="plan-feature">
+                        <span class="check">✓</span> E-Mail Versand
+                    </div>
+                    <div class="plan-feature">
+                        <span class="check">✓</span> Firmenlogo
+                    </div>
+                    <div class="plan-feature">
+                        <span class="check">✓</span> Prioritäts-Support
+                    </div>
+                </div>
+                <button class="plan-btn pro" onclick="subscribe()">
+                    Jetzt Pro werden
+                </button>
+            </div>
+
+        </div>
+
+        <a href="/" class="back-link">← Zurück zur App</a>
+
+    </div>
+
+    <script>
+        async function subscribe() {
+            const response = await fetch('/create-checkout-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+            if (data.url) {
+                window.location.href = data.url;
+            }
+        }
+    </script>
+</body>
+</html>

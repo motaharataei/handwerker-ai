@@ -7,13 +7,14 @@ from database import (init_db, save_document, get_all_documents,
 from pdf_generator import generate_pdf
 import os
 import json
+import stripe
 
 load_dotenv()
 
 app = Flask(__name__)
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
-# Initialize database on startup
 init_db()
 
 @app.route("/")
@@ -43,23 +44,19 @@ def generate():
     hours = float(data.get("hours", 1))
     hourly_rate = float(data.get("hourly_rate", 50))
 
-    # Calculate costs
     labor_cost = hours * hourly_rate
     material_cost = float(data.get("material_cost", 0))
     total_net = labor_cost + material_cost
     vat = total_net * 0.19
     total_gross = total_net + vat
 
-    # Generate invoice number
     if doc_type == 'rechnung':
         invoice_number = get_next_invoice_number()
     else:
         invoice_number = get_next_offer_number()
 
-    # Get company info
     company = get_company()
 
-    # Ask AI to write professional job description
     doc_type_german = "Rechnung" if doc_type == "rechnung" else "Angebot"
 
     prompt = f"""
@@ -83,7 +80,6 @@ Kein Anrede, keine Grußformel, nur die Beschreibung der ausgeführten Arbeiten.
 
     ai_content = response.choices[0].message.content.strip()
 
-    # Save to database
     doc_data = {
         'type': doc_type,
         'customer_name': customer_name,
@@ -107,8 +103,6 @@ Kein Anrede, keine Grußformel, nur die Beschreibung der ausgeführten Arbeiten.
     }
 
     doc_id = save_document(doc_data)
-
-    # Generate PDF
     generate_pdf(doc_id, doc_data)
 
     return jsonify({
@@ -183,6 +177,7 @@ def documents():
             'created_at': row[13]
         })
     return jsonify(docs)
+
 @app.route("/parse-voice", methods=["POST"])
 def parse_voice():
     transcript = request.json.get("transcript")
@@ -218,6 +213,39 @@ Antworte NUR mit diesem JSON Format, nichts anderes:
         return jsonify({'success': True, 'data': data})
     except:
         return jsonify({'success': False})
+
+@app.route("/pricing")
+def pricing():
+    return render_template("pricing.html")
+
+@app.route("/create-checkout-session", methods=["POST"])
+def create_checkout_session():
+    try:
+        session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=[{
+                "price_data": {
+                    "currency": "eur",
+                    "product_data": {
+                        "name": "HandwerkerAI Pro",
+                        "description": "Unbegrenzte Angebote & Rechnungen mit KI"
+                    },
+                    "unit_amount": 1500,
+                    "recurring": {"interval": "month"}
+                },
+                "quantity": 1
+            }],
+            mode="subscription",
+            success_url=request.host_url + "success",
+            cancel_url=request.host_url + "pricing",
+        )
+        return jsonify({"url": session.url})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route("/success")
+def success():
+    return render_template("success.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
