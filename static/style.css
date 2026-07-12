@@ -18,7 +18,7 @@ body {
     height: 100vh;
 }
 
-/* Sidebar */
+/* ── SIDEBAR (desktop) ───────────────────────────── */
 .sidebar {
     width: 260px;
     background: #111111;
@@ -44,7 +44,6 @@ body {
     margin-top: -14px;
 }
 
-/* Nav */
 .nav {
     display: flex;
     flex-direction: column;
@@ -112,7 +111,7 @@ body {
     margin-top: 2px;
 }
 
-/* Main */
+/* ── MAIN ────────────────────────────────────────── */
 .main {
     flex: 1;
     overflow-y: auto;
@@ -122,7 +121,6 @@ body {
     gap: 24px;
 }
 
-/* Header */
 .header h1 {
     font-size: 1.6rem;
     font-weight: 700;
@@ -136,7 +134,7 @@ body {
     margin-top: 4px;
 }
 
-/* Form */
+/* ── FORM ────────────────────────────────────────── */
 .form-container {
     display: flex;
     flex-direction: column;
@@ -158,6 +156,7 @@ body {
     cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.15s;
+    flex: 1;
 }
 
 .type-btn:hover {
@@ -186,7 +185,6 @@ body {
     font-size: 0.82rem;
     color: #666;
     font-weight: 500;
-    letter-spacing: 0.3px;
 }
 
 .form-row {
@@ -214,7 +212,7 @@ input, textarea {
     background: #0a0a0a;
     border: 1px solid #2a2a2a;
     color: #e8e8e8;
-    padding: 10px 14px;
+    padding: 12px 14px;
     border-radius: 8px;
     font-size: 0.9rem;
     outline: none;
@@ -231,7 +229,7 @@ textarea {
     min-height: 80px;
 }
 
-/* Voice */
+/* ── VOICE ───────────────────────────────────────── */
 .voice-bar {
     display: flex;
     align-items: center;
@@ -242,7 +240,7 @@ textarea {
     background: #1a1a1a;
     border: 1px solid #2a2a2a;
     color: #e8e8e8;
-    padding: 8px 16px;
+    padding: 10px 16px;
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.88rem;
@@ -250,9 +248,7 @@ textarea {
     white-space: nowrap;
 }
 
-.voice-btn:hover {
-    background: #2a2a2a;
-}
+.voice-btn:hover { background: #2a2a2a; }
 
 .voice-btn.recording {
     background: #ff4444;
@@ -263,7 +259,7 @@ textarea {
 
 @keyframes pulse {
     0% { opacity: 1; }
-    50% { opacity: 0.7; }
+    50% { opacity: 0.6; }
     100% { opacity: 1; }
 }
 
@@ -272,7 +268,7 @@ textarea {
     color: #444;
 }
 
-/* Cost Preview */
+/* ── COST PREVIEW ────────────────────────────────── */
 .cost-preview {
     background: #0a0a0a;
     border: 1px solid #1e1e1e;
@@ -299,7 +295,7 @@ textarea {
     font-size: 0.95rem;
 }
 
-/* Buttons */
+/* ── BUTTONS ─────────────────────────────────────── */
 .generate-btn {
     background: #ffffff;
     color: #000000;
@@ -320,7 +316,7 @@ textarea {
     cursor: not-allowed;
 }
 
-/* Result */
+/* ── RESULT ──────────────────────────────────────── */
 .result {
     background: #111111;
     border: 1px solid #1e1e1e;
@@ -337,6 +333,8 @@ textarea {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .result-header h3 {
@@ -381,6 +379,7 @@ textarea {
     font-size: 0.88rem;
     font-weight: 600;
     transition: background 0.2s;
+    text-align: center;
 }
 
 .download-btn:hover { background: #43a047; }
@@ -415,7 +414,7 @@ textarea {
     color: #e8e8e8;
 }
 
-/* Documents Grid */
+/* ── DOCUMENTS GRID ──────────────────────────────── */
 .documents-grid {
     display: flex;
     flex-direction: column;
@@ -432,16 +431,16 @@ textarea {
     align-items: center;
     justify-content: space-between;
     transition: border-color 0.15s;
+    gap: 12px;
 }
 
-.document-card:hover {
-    border-color: #2a2a2a;
-}
+.document-card:hover { border-color: #2a2a2a; }
 
 .document-card-left {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    flex: 1;
 }
 
 .document-card-type {
@@ -465,7 +464,9 @@ textarea {
 .document-card-right {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 .document-card-amount {
@@ -506,36 +507,82 @@ textarea {
     font-size: 0.82rem;
     cursor: pointer;
     transition: background 0.15s;
+    border: none;
 }
 
 .card-convert:hover { background: #2a2a2a; }
 
-/* Scrollbar */
+/* ── SCROLLBAR ───────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-thumb {
     background: #1e1e1e;
     border-radius: 3px;
 }
 
-/* Mobile */
+/* ── BOTTOM NAV (mobile only) ────────────────────── */
+.bottom-nav {
+    display: none;
+}
+
+/* ── MOBILE ──────────────────────────────────────── */
 @media (max-width: 768px) {
-    .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        flex-wrap: wrap;
-        padding: 12px;
-        gap: 8px;
-    }
 
     .app {
         flex-direction: column;
     }
 
-    .main {
-        padding: 20px 16px;
+    /* Hide desktop sidebar */
+    .sidebar {
+        display: none;
     }
 
+    /* Show bottom nav */
+    .bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #111111;
+        border-top: 1px solid #1e1e1e;
+        z-index: 100;
+        height: 64px;
+    }
+
+    .bottom-nav-btn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        background: transparent;
+        border: none;
+        color: #555;
+        cursor: pointer;
+        font-size: 0.7rem;
+        transition: color 0.15s;
+        padding: 8px 0;
+    }
+
+    .bottom-nav-btn .icon {
+        font-size: 1.3rem;
+    }
+
+    .bottom-nav-btn.active {
+        color: #ffffff;
+    }
+
+    .bottom-nav-btn:hover {
+        color: #e8e8e8;
+    }
+
+    /* Main padding for bottom nav */
+    .main {
+        padding: 20px 16px 80px 16px;
+    }
+
+    /* Form single column */
     .form-row {
         grid-template-columns: 1fr;
     }
@@ -544,7 +591,42 @@ textarea {
         grid-template-columns: 1fr;
     }
 
+    /* Full width buttons */
     .result-actions {
         flex-direction: column;
+    }
+
+    .download-btn,
+    .convert-btn,
+    .new-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Document cards stack */
+    .document-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .document-card-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    /* Voice bar */
+    .voice-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .voice-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Header */
+    .header h1 {
+        font-size: 1.3rem;
     }
 }
