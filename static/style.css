@@ -713,3 +713,34 @@ textarea {
         padding: 76px 16px 80px 16px;
     }
 }
+.usage-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #555;
+    margin-bottom: 6px;
+}
+
+.upgrade-link {
+    color: #4caf50;
+    text-decoration: none;
+    font-size: 0.75rem;
+}
+
+.upgrade-link:hover {
+    color: #43a047;
+}
+
+.usage-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+    height: 4px;
+    width: 100%;
+}
+
+.usage-fill {
+    background: #4caf50;
+    height: 4px;
+    border-radius: 4px;
+    transition: width 0.3s;
+}

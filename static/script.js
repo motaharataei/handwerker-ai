@@ -1,3 +1,6 @@
+let selectedType = 'angebot';
+let currentDocId = null;
+
 // Hamburger menu toggle
 function toggleMenu() {
     const sidebar = document.querySelector('.sidebar');
@@ -6,19 +9,20 @@ function toggleMenu() {
     overlay.classList.toggle('visible');
 }
 
-let selectedType = 'angebot';
-let currentDocId = null;
-
 // Page navigation
-function showPage(page) {
+function showPage(page, btn) {
     document.getElementById('page-create').style.display = 'none';
     document.getElementById('page-documents').style.display = 'none';
     document.getElementById('page-company').style.display = 'none';
     document.getElementById(`page-${page}`).style.display = 'flex';
     document.getElementById(`page-${page}`).style.flexDirection = 'column';
 
+    // Update desktop nav
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
+    // Update mobile nav
+    document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('active'));
+    // Activate clicked button
+    if (btn) btn.classList.add('active');
 
     if (page === 'documents') loadDocumentsPage();
     if (page === 'company') loadCompany();
@@ -81,7 +85,7 @@ function toggleVoice() {
         document.getElementById('voice-status').textContent = 'Höre zu...';
     };
 
-   recognition.onresult = async (event) => {
+    recognition.onresult = async (event) => {
         const transcript = event.results[0][0].transcript;
         document.getElementById('voice-status').textContent = '⏳ KI analysiert...';
 
@@ -111,6 +115,7 @@ function toggleVoice() {
             document.getElementById('voice-status').textContent = '✅ Sprache erkannt!';
         }
     };
+
     recognition.onerror = () => {
         document.getElementById('voice-status').textContent = '❌ Fehler. Bitte erneut versuchen.';
     };
@@ -161,6 +166,12 @@ async function generateDocument() {
 
         const data = await response.json();
 
+        // Redirect to pricing if limit reached
+        if (data.limit_reached) {
+            window.location.href = '/pricing';
+            return;
+        }
+
         if (data.success) {
             currentDocId = data.doc_id;
 
@@ -168,7 +179,6 @@ async function generateDocument() {
             document.getElementById('result-number').textContent = data.invoice_number;
             document.getElementById('download-btn').href = `/download/${data.doc_id}`;
 
-            // Show convert button only for Angebote
             const convertBtn = document.getElementById('convert-btn');
             if (selectedType === 'angebot') {
                 convertBtn.style.display = 'inline-block';
@@ -291,7 +301,7 @@ async function loadDocumentsPage() {
                     <div class="document-card-amount">€ ${parseFloat(doc.total_gross).toFixed(2)}</div>
                     <div class="card-actions">
                         <a href="/download/${doc.id}" class="card-download">⬇️ PDF</a>
-                        ${doc.type === 'angebot' ? `<button class="card-convert" 
+                        ${doc.type === 'angebot' ? `<button class="card-convert"
                             onclick="convertFromCard(${doc.id})">→ Rechnung</button>` : ''}
                     </div>
                 </div>
@@ -364,6 +374,42 @@ async function loadCompany() {
     }
 }
 
+// Load usage info
+async function loadUsage() {
+    try {
+        const response = await fetch('/usage');
+        const data = await response.json();
+
+        if (!data.is_pro) {
+            const remaining = data.remaining;
+            const usageBar = document.getElementById('usage-bar');
+            if (usageBar) {
+                usageBar.innerHTML = `
+                    <div class="usage-info">
+                        <span>${remaining} von 5 Dokumenten übrig</span>
+                        <a href="/pricing" class="upgrade-link">⭐ Upgrade</a>
+                    </div>
+                    <div class="usage-track">
+                        <div class="usage-fill" style="width:${(data.usage / 5) * 100}%"></div>
+                    </div>
+                `;
+            }
+        } else {
+            const usageBar = document.getElementById('usage-bar');
+            if (usageBar) {
+                usageBar.innerHTML = `
+                    <div class="usage-info">
+                        <span>⭐ Pro — Unbegrenzte Dokumente</span>
+                    </div>
+                `;
+            }
+        }
+    } catch (error) {
+        console.error('Fehler:', error);
+    }
+}
+
 // Init
 loadDocuments();
 updatePreview();
+loadUsage();

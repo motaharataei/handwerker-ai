@@ -3,7 +3,8 @@ from groq import Groq
 from dotenv import load_dotenv
 from database import (init_db, save_document, get_all_documents,
                       get_document, save_company, get_company,
-                      get_next_invoice_number, get_next_offer_number)
+                      get_next_invoice_number, get_next_offer_number,
+                      get_monthly_usage, check_is_pro, save_pro_user)
 from pdf_generator import generate_pdf
 import os
 import json
@@ -34,6 +35,18 @@ def save_company_info():
 
 @app.route("/generate", methods=["POST"])
 def generate():
+    ip = request.remote_addr
+
+    # Check usage limit for free users
+    if not check_is_pro(ip):
+        usage = get_monthly_usage(ip)
+        if usage >= 5:
+            return jsonify({
+                'success': False,
+                'limit_reached': True,
+                'message': 'Du hast dein monatliches Limit von 5 Dokumenten erreicht.'
+            }), 403
+
     data = request.json
 
     doc_type = data.get("type")
@@ -56,7 +69,6 @@ def generate():
         invoice_number = get_next_offer_number()
 
     company = get_company()
-
     doc_type_german = "Rechnung" if doc_type == "rechnung" else "Angebot"
 
     prompt = f"""
@@ -99,7 +111,8 @@ Kein Anrede, keine Grußformel, nur die Beschreibung der ausgeführten Arbeiten.
         'company_email': company.get('email', ''),
         'company_tax_number': company.get('tax_number', ''),
         'company_iban': company.get('iban', ''),
-        'company_bic': company.get('bic', '')
+        'company_bic': company.get('bic', ''),
+        'ip_address': ip
     }
 
     doc_id = save_document(doc_data)
@@ -143,7 +156,8 @@ def convert_to_invoice(doc_id):
         'company_email': company.get('email', ''),
         'company_tax_number': company.get('tax_number', ''),
         'company_iban': company.get('iban', ''),
-        'company_bic': company.get('bic', '')
+        'company_bic': company.get('bic', ''),
+        'ip_address': row[14] if len(row) > 14 else ''
     }
 
     new_id = save_document(doc_data)
@@ -236,7 +250,7 @@ def create_checkout_session():
                 "quantity": 1
             }],
             mode="subscription",
-            success_url=request.host_url + "success",
+            success_url=request.host_url + "success?session_id={CHECKOUT_SESSION_ID}",
             cancel_url=request.host_url + "pricing",
         )
         return jsonify({"url": session.url})
@@ -245,7 +259,28 @@ def create_checkout_session():
 
 @app.route("/success")
 def success():
+    session_id = request.args.get("session_id")
+    if session_id:
+        try:
+            session = stripe.checkout.Session.retrieve(session_id)
+            if session.payment_status == "paid":
+                ip = request.remote_addr
+                save_pro_user(ip, session_id)
+        except:
+            pass
     return render_template("success.html")
+
+@app.route("/usage")
+def usage():
+    ip = request.remote_addr
+    is_pro = check_is_pro(ip)
+    monthly_usage = get_monthly_usage(ip)
+    return jsonify({
+        'is_pro': is_pro,
+        'usage': monthly_usage,
+        'limit': 5,
+        'remaining': max(0, 5 - monthly_usage) if not is_pro else 'unlimited'
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
