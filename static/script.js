@@ -408,7 +408,49 @@ async function loadUsage() {
         console.error('Fehler:', error);
     }
 }
+// Send email
+async function sendEmail() {
+    const email = document.getElementById('customer-email').value.trim();
+    const status = document.getElementById('email-status');
 
+    if (!email) {
+        status.textContent = '❌ Bitte E-Mail Adresse eingeben.';
+        return;
+    }
+
+    if (!currentDocId) {
+        status.textContent = '❌ Kein Dokument gefunden.';
+        return;
+    }
+
+    status.textContent = '⏳ Sende E-Mail...';
+
+    try {
+        const response = await fetch('/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                customer_email: email,
+                doc_id: currentDocId,
+                customer_name: document.getElementById('customer_name').value,
+                invoice_number: document.getElementById('result-number').textContent
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            status.textContent = '✅ E-Mail erfolgreich gesendet!';
+            status.style.color = '#4caf50';
+        } else {
+            status.textContent = `❌ Fehler: ${data.error}`;
+            status.style.color = '#ff4444';
+        }
+    } catch (error) {
+        status.textContent = '❌ Fehler beim Senden.';
+        status.style.color = '#ff4444';
+    }
+}
 // Init
 loadDocuments();
 updatePreview();

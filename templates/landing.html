@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HandwerkerAI — Angebote & Rechnungen in Sekunden</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #080808;
+            --bg2: #0f0f0f;
+            --bg3: #141414;
+            --border: #1e1e1e;
+            --text: #e8e8e8;
+            --muted: #555;
+            --muted2: #888;
+            --green: #4caf50;
+            --blue: #2f6feb;
+            --white: #ffffff;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        nav, .hero, .section, .cta-section, footer, hr {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── NAVBAR ─────────────────────────────────── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(8, 8, 8, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            color: var(--muted2);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--white);
+        }
+
+        .nav-cta {
+            background: var(--white);
+            color: #000 !important;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-weight: 600 !important;
+            font-size: 0.88rem !important;
+            transition: background 0.2s !important;
+        }
+
+        .nav-cta:hover {
+            background: #e0e0e0 !important;
+        }
+
+        /* ── HERO ───────────────────────────────────── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 24px 80px;
+            overflow: hidden;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(47,111,235,0.1);
+            border: 1px solid rgba(47,111,235,0.2);
+            color: #7aa8f5;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            margin-bottom: 32px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .hero-badge span {
+            width: 6px;
+            height: 6px;
+            background: #7aa8f5;
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.4rem, 6vw, 4.5rem);
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.6s ease 0.1s both;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #2f6feb, #7aa8f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--muted2);
+            max-width: 560px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease 0.2s both;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 0.6s ease 0.3s both;
+        }
+
+        .btn-primary {
+            background: var(--white);
+            color: #000;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background: #e8e8e8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--muted2);
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg3);
+            color: var(--white);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 48px;
+            margin-top: 64px;
+            animation: fadeInUp 0.6s ease 0.4s both;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -1px;
+        }
+
+        .hero-stat-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* ── SECTIONS ───────────────────────────────── */
+        .section {
+            padding: 100px 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -1px;
+            text-align: center;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .section-sub {
+            font-size: 1rem;
+            color: var(--muted2);
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto 64px;
+            line-height: 1.7;
+        }
+
+        /* ── PROBLEM ────────────────────────────────── */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .problem-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .problem-card:hover {
+            border-color: #2a2a2a;
+            transform: translateY(-2px);
+        }
+
+        .problem-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .problem-text h4 {
+            font-size: 0.95rem;
+            color: var(--white);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .problem-text p {
+            font-size: 0.85rem;
+            color: var(--muted2);
+            line-height: 1.6;
+        }
+
+        /* ── STEPS ──────────────────────────────────── */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 32px 24px;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: all 0.2s;
+        }
+
+        .step:hover {
+            border-color: #2a2a2a;
+            transform: translateY(-4px);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--muted2);
+            margin: 0 auto 16px;
+        }
+
+        .step-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .step h3 {
+            font-size: 1rem;
+            color: var(--white);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .step p {
+            font-size: 0.85rem;
+            color: var(--muted2);
+            line-height: 1.6;
+        }
+
+        /* ── FEATURES ───────────────────────────────── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .feature-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.2s;
+        }
+
+        .feature-card:hover {
+            border-color: #2a2a2a;
+            transform: translateY(-2px);
+        }
+
+        .feature-card.featured {
+            border-color: rgba(47,111,235,0.3);
+            background: linear-gradient(135deg, rgba(47,111,235,0.05), var(--bg2));
+        }
+
+        .feature-icon {
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            font-size: 1rem;
+            color: var(--white);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: 0.88rem;
+            color: var(--muted2);
+            line-height: 1.7;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            background: rgba(47,111,235,0.1);
+            color: #7aa8f5;
+            font-size: 0.72rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-top: 12px;
+        }
+
+        /* ── DEMO ───────────────────────────────────── */
+        .demo-container {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .demo-bar {
+            background: var(--bg3);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .demo-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .demo-dot.red { background: #ff5f57; }
+        .demo-dot.yellow { background: #febc2e; }
+        .demo-dot.green { background: #28c840; }
+
+        .demo-url {
+            flex: 1;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 4px 12px;
+            font-size: 0.78rem;
+            color: var(--muted);
+            text-align: center;
+            margin: 0 16px;
+        }
+
+        .demo-content {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .demo-voice {
+            background: rgba(47,111,235,0.08);
+            border: 1px solid rgba(47,111,235,0.15);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .demo-voice-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            animation: pulse-blue 2s infinite;
+        }
+
+        @keyframes pulse-blue {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(47,111,235,0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(47,111,235,0); }
+        }
+
+        .demo-voice-text {
+            font-size: 0.9rem;
+            color: var(--text);
+            font-style: italic;
+        }
+
+        .demo-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .demo-field {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+
+        .demo-field-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .demo-field-value {
+            font-size: 0.88rem;
+            color: var(--text);
+        }
+
+        .demo-generate {
+            background: var(--white);
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .demo-result {
+            background: rgba(76,175,80,0.05);
+            border: 1px solid rgba(76,175,80,0.15);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .demo-result-icon { font-size: 1.5rem; }
+
+        .demo-result-text h4 {
+            font-size: 0.9rem;
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .demo-result-text p {
+            font-size: 0.82rem;
+            color: var(--muted2);
+            margin-top: 2px;
+        }
+
+        /* ── PRICING ────────────────────────────────── */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .price-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .price-card.featured {
+            border-color: var(--white);
+        }
+
+        .price-label {
+            font-size: 0.72rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .price-label.pro { color: var(--green); }
+
+        .price-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-top: 4px;
+        }
+
+        .price-amount {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        .price-amount span {
+            font-size: 1rem;
+            color: var(--muted);
+            font-weight: 400;
+            letter-spacing: 0;
+        }
+
+        .price-features {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .price-feature {
+            font-size: 0.88rem;
+            color: var(--muted2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .price-feature .check { color: var(--green); }
+        .price-feature .cross { color: #333; }
+
+        .price-btn {
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .price-btn.free {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted2);
+        }
+
+        .price-btn.free:hover {
+            background: var(--bg3);
+            color: var(--white);
+        }
+
+        .price-btn.pro {
+            background: var(--white);
+            color: #000;
+        }
+
+        .price-btn.pro:hover { background: #e0e0e0; }
+
+        /* ── CTA ────────────────────────────────────── */
+        .cta-section {
+            padding: 100px 24px;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -2px;
+            margin-bottom: 16px;
+            line-height: 1.1;
+        }
+
+        .cta-section p {
+            font-size: 1rem;
+            color: var(--muted2);
+            margin-bottom: 40px;
+        }
+
+        /* ── FOOTER ─────────────────────────────────── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 32px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-logo {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: var(--white); }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── ANIMATIONS ─────────────────────────────── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── MOBILE ─────────────────────────────────── */
+        @media (max-width: 768px) {
+            nav { padding: 14px 20px; }
+
+            .nav-links { gap: 16px; }
+
+            .nav-links a:not(.nav-cta) { display: none; }
+
+            .hero { padding: 100px 20px 60px; }
+
+            .hero-stats { gap: 28px; }
+
+            .section { padding: 60px 20px; }
+
+            .demo-fields { grid-template-columns: 1fr; }
+
+            footer {
+                padding: 24px 20px;
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particles"></canvas>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-logo">⚡ HandwerkerAI</div>
+        <div class="nav-links">
+            <a href="#wie-es-funktioniert">So funktioniert's</a>
+            <a href="#features">Features</a>
+            <a href="#preise">Preise</a>
+            <a href="/app" class="nav-cta">Kostenlos starten →</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-badge">
+            <span></span>
+            KI-gestützte Handwerkersoftware
+        </div>
+
+        <h1>
+            Angebote & Rechnungen<br>
+            in <span class="highlight">30 Sekunden</span>
+        </h1>
+
+        <p class="hero-sub">
+            Beschreibe den Job — HandwerkerAI schreibt die professionelle
+            Leistungsbeschreibung, berechnet die Kosten und erstellt das PDF.
+            Einfach. Schnell. Rechtssicher.
+        </p>
+
+        <div class="hero-btns">
+            <a href="/app" class="btn-primary">⚡ Kostenlos starten</a>
+            <a href="#wie-es-funktioniert" class="btn-secondary">So funktioniert's</a>
+        </div>
+
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-number">30s</div>
+                <div class="hero-stat-label">Pro Dokument</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">100%</div>
+                <div class="hero-stat-label">Rechtssicher</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">€0</div>
+                <div class="hero-stat-label">Zum Starten</div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- PROBLEM -->
+    <div class="section fade-in">
+        <p class="section-label">Das Problem</p>
+        <h2 class="section-title">Kennst du das?</h2>
+        <p class="section-sub">
+            Als Handwerker verbringst du Abende mit Papierkram
+            statt mit deiner Familie.
+        </p>
+
+        <div class="problem-grid">
+            <div class="problem-card">
+                <div class="problem-icon">😤</div>
+                <div class="problem-text">
+                    <h4>Stundenlang Angebote schreiben</h4>
+                    <p>Du sitzt nach einem langen Arbeitstag am Laptop und tippst Angebote, die du längst verschicken solltest.</p>
+                </div>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">😰</div>
+                <div class="problem-text">
+                    <h4>Aufträge verlieren weil zu langsam</h4>
+                    <p>Wer nicht innerhalb von 24 Stunden antwortet, verliert den Auftrag an den Konkurrenten.</p>
+                </div>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">😬</div>
+                <div class="problem-text">
+                    <h4>Fehler in Rechnungen riskieren</h4>
+                    <p>Falsche MwSt., fehlende Pflichtangaben — ein Fehler und du hast Ärger mit dem Finanzamt.</p>
+                </div>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">📱</div>
+                <div class="problem-text">
+                    <h4>Keine Lösung fürs Handy</h4>
+                    <p>Andere Software funktioniert nur am PC. Du bist aber den ganzen Tag auf der Baustelle.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- HOW IT WORKS -->
+    <div class="section fade-in" id="wie-es-funktioniert">
+        <p class="section-label">So funktioniert's</p>
+        <h2 class="section-title">3 Schritte. 30 Sekunden.</h2>
+        <p class="section-sub">Kein Einrichten. Kein Training. Einfach loslegen.</p>
+
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">01</div>
+                <div class="step-icon">🎤</div>
+                <h3>Job beschreiben</h3>
+                <p>Sprich einfach in dein Handy was du gemacht hast — oder tippe es kurz ein.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">02</div>
+                <div class="step-icon">🤖</div>
+                <h3>KI übernimmt</h3>
+                <p>Unsere KI schreibt die professionelle Leistungsbeschreibung und berechnet alle Kosten.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">03</div>
+                <div class="step-icon">📄</div>
+                <h3>PDF versenden</h3>
+                <p>Lade das fertige PDF herunter oder sende es direkt per E-Mail an deinen Kunden.</p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- DEMO -->
+    <div class="section fade-in">
+        <p class="section-label">Live Demo</p>
+        <h2 class="section-title">Sieh es in Aktion</h2>
+        <p class="section-sub">So einfach ist HandwerkerAI zu bedienen.</p>
+
+        <div class="demo-container">
+            <div class="demo-bar">
+                <div class="demo-dot red"></div>
+                <div class="demo-dot yellow"></div>
+                <div class="demo-dot green"></div>
+                <div class="demo-url">handwerker-ai.onrender.com/app</div>
+            </div>
+            <div class="demo-content">
+                <div class="demo-voice">
+                    <div class="demo-voice-icon">🎤</div>
+                    <div class="demo-voice-text">
+                        "Heizung repariert bei Thomas Müller, 3 Stunden, Stundensatz 65 Euro, Kupferrohr verwendet..."
+                    </div>
+                </div>
+                <div class="demo-fields">
+                    <div class="demo-field">
+                        <div class="demo-field-label">KUNDE</div>
+                        <div class="demo-field-value">Thomas Müller</div>
+                    </div>
+                    <div class="demo-field">
+                        <div class="demo-field-label">ARBEITSSTUNDEN</div>
+                        <div class="demo-field-value">3 Std. × €65</div>
+                    </div>
+                    <div class="demo-field">
+                        <div class="demo-field-label">MATERIAL</div>
+                        <div class="demo-field-value">Kupferrohr, Dichtungen</div>
+                    </div>
+                    <div class="demo-field">
+                        <div class="demo-field-label">GESAMT BRUTTO</div>
+                        <div class="demo-field-value" style="color:#4caf50;font-weight:600;">€ 231.75</div>
+                    </div>
+                </div>
+                <button class="demo-generate">⚡ Dokument generieren</button>
+                <div class="demo-result">
+                    <div class="demo-result-icon">✅</div>
+                    <div class="demo-result-text">
+                        <h4>Rechnung RE-2026-0001 erstellt!</h4>
+                        <p>PDF bereit zum Download · In 28 Sekunden</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- FEATURES -->
+    <div class="section fade-in" id="features">
+        <p class="section-label">Features</p>
+        <h2 class="section-title">Alles was du brauchst</h2>
+        <p class="section-sub">Gebaut für Handwerker. Nicht für Buchhalter.</p>
+
+        <div class="features-grid">
+            <div class="feature-card featured">
+                <div class="feature-icon">🎤</div>
+                <h3>Spracheingabe</h3>
+                <p>Beschreibe den Job einfach per Sprache. Die KI füllt alle Felder automatisch aus — Kunde, Material, Stunden.</p>
+                <span class="feature-tag">Einzigartig</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>KI-Leistungsbeschreibung</h3>
+                <p>Aus deinen Notizen wird automatisch eine professionelle, rechtssichere Leistungsbeschreibung auf Deutsch.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📄</div>
+                <h3>Professionelle PDFs</h3>
+                <p>Saubere Dokumente mit deinem Firmennamen, IBAN, Steuernummer und automatischer MwSt-Berechnung.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Angebot → Rechnung</h3>
+                <p>Konvertiere ein Angebot mit einem Klick in eine Rechnung. Nummer wird automatisch vergeben.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📧</div>
+                <h3>Direkt per E-Mail</h3>
+                <p>Sende das fertige Dokument direkt aus der App per E-Mail an deinen Kunden — ohne Umwege.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Mobil optimiert</h3>
+                <p>Funktioniert perfekt auf dem Handy. Dokument erstellen direkt nach dem Job — noch auf der Baustelle.</p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- PRICING -->
+    <div class="section fade-in" id="preise">
+        <p class="section-label">Preise</p>
+        <h2 class="section-title">Einfach & transparent</h2>
+        <p class="section-sub">Keine versteckten Kosten. Keine Jahresverträge.</p>
+
+        <div class="pricing-grid">
+            <div class="price-card">
+                <div>
+                    <div class="price-label">Kostenlos</div>
+                    <div class="price-name">Starter</div>
+                </div>
+                <div class="price-amount">€0 <span>/Monat</span></div>
+                <div class="price-features">
+                    <div class="price-feature"><span class="check">✓</span> 5 Dokumente pro Monat</div>
+                    <div class="price-feature"><span class="check">✓</span> KI-Leistungsbeschreibung</div>
+                    <div class="price-feature"><span class="check">✓</span> PDF Export</div>
+                    <div class="price-feature"><span class="check">✓</span> Spracheingabe</div>
+                    <div class="price-feature"><span class="cross">✗</span> Unbegrenzte Dokumente</div>
+                    <div class="price-feature"><span class="cross">✗</span> E-Mail Versand</div>
+                </div>
+                <a href="/app" class="price-btn free">Kostenlos starten</a>
+            </div>
+
+            <div class="price-card featured">
+                <div>
+                    <div class="price-label pro">⭐ Empfohlen</div>
+                    <div class="price-name">Pro</div>
+                </div>
+                <div class="price-amount">€15 <span>/Monat</span></div>
+                <div class="price-features">
+                    <div class="price-feature"><span class="check">✓</span> Unbegrenzte Dokumente</div>
+                    <div class="price-feature"><span class="check">✓</span> KI-Leistungsbeschreibung</div>
+                    <div class="price-feature"><span class="check">✓</span> PDF Export</div>
+                    <div class="price-feature"><span class="check">✓</span> Spracheingabe</div>
+                    <div class="price-feature"><span class="check">✓</span> E-Mail Versand</div>
+                    <div class="price-feature"><span class="check">✓</span> Prioritäts-Support</div>
+                </div>
+                <button class="price-btn pro" onclick="window.location.href='/pricing'">
+                    Jetzt Pro werden
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- CTA -->
+    <div class="cta-section fade-in">
+        <h2>Bereit loszulegen?</h2>
+        <p>Kostenlos starten. Keine Kreditkarte erforderlich.</p>
+        <a href="/app" class="btn-primary" style="display:inline-flex;">
+            ⚡ Jetzt kostenlos starten
+        </a>
+    </div>
+
+    <hr class="divider">
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">⚡ HandwerkerAI</div>
+        <div class="footer-links">
+            <a href="#features">Features</a>
+            <a href="#preise">Preise</a>
+            <a href="/app">App</a>
+        </div>
+    </footer>
+
+    <script>
+        // ── PARTICLES ────────────────────────────────
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        resize();
+        window.addEventListener('resize', resize);
+
+        function createParticle() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4,
+                size: Math.random() * 1.5 + 0.5,
+                opacity: Math.random() * 0.4 + 0.1
+            };
+        }
+
+        for (let i = 0; i < 120; i++) {
+            particles.push(createParticle());
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((p, i) => {
+                particles.slice(i + 1).forEach(p2 => {
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(47,111,235,${0.08 * (1 - dist / 120)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                });
+            });
+
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(47,111,235,${p.opacity})`;
+                ctx.fill();
+            });
+        }
+
+        function updateParticles() {
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+            });
+        }
+
+        function animate() {
+            updateParticles();
+            drawParticles();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // ── SCROLL ANIMATIONS ────────────────────────
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // ── TYPING EFFECT ────────────────────────────
+        const words = ['Heizungsbauer', 'Elektriker', 'Klempner', 'Dachdecker', 'Maler'];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingEl = document.querySelector('.highlight');
+
+        function type() {
+            const word = words[wordIndex];
+            if (isDeleting) {
+                typingEl.textContent = word.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingEl.textContent = word.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            if (!isDeleting && charIndex === word.length) {
+                setTimeout(() => isDeleting = true, 2000);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+            }
+
+            setTimeout(type, isDeleting ? 60 : 100);
+        }
+
+        type();
+    </script>
+
+</body>
+</html>

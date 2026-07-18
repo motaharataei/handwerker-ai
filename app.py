@@ -10,6 +10,12 @@ import os
 import json
 import stripe
 
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -19,9 +25,12 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 init_db()
 
 @app.route("/")
+def landing():
+    return render_template("landing.html")
+
+@app.route("/app")
 def index():
     return render_template("index.html")
-
 @app.route("/company", methods=["GET"])
 def get_company_info():
     company = get_company()
@@ -281,6 +290,60 @@ def usage():
         'limit': 5,
         'remaining': max(0, 5 - monthly_usage) if not is_pro else 'unlimited'
     })
+
+@app.route("/send-email", methods=["POST"])
+def send_email():
+    data = request.json
+    customer_email = data.get("customer_email")
+    doc_id = data.get("doc_id")
+    customer_name = data.get("customer_name")
+    invoice_number = data.get("invoice_number")
+
+    pdf_path = f'static/pdfs/document_{doc_id}.pdf'
+
+    if not os.path.exists(pdf_path):
+        return jsonify({'success': False, 'error': 'PDF nicht gefunden'}), 404
+
+    try:
+        gmail = os.getenv("GMAIL_ADDRESS")
+        password = os.getenv("GMAIL_APP_PASSWORD")
+
+        msg = MIMEMultipart()
+        msg['From'] = gmail
+        msg['To'] = customer_email
+        msg['Subject'] = f'Ihr Dokument {invoice_number} von HandwerkerAI'
+
+        body = f"""
+Sehr geehrte/r {customer_name},
+
+anbei erhalten Sie Ihr Dokument mit der Nummer {invoice_number}.
+
+Bei Fragen stehen wir Ihnen gerne zur Verfügung.
+
+Mit freundlichen Grüßen
+"""
+        msg.attach(MIMEText(body, 'plain'))
+
+        with open(pdf_path, 'rb') as f:
+            attachment = MIMEBase('application', 'octet-stream')
+            attachment.set_payload(f.read())
+            encoders.encode_base64(attachment)
+            attachment.add_header(
+                'Content-Disposition',
+                f'attachment; filename=dokument_{invoice_number}.pdf'
+            )
+            msg.attach(attachment)
+
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(gmail, password)
+        server.sendmail(gmail, customer_email, msg.as_string())
+        server.quit()
+
+        return jsonify({'success': True})
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)

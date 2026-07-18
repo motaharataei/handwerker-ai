@@ -154,13 +154,23 @@
                         <p class="result-label">KI-Leistungsbeschreibung:</p>
                         <p id="result-text"></p>
                     </div>
-                    <div class="result-actions">
-                        <a id="download-btn" href="#" class="download-btn">⬇️ PDF herunterladen</a>
-                        <button id="convert-btn" class="convert-btn" style="display:none" onclick="convertToInvoice()">
-                            🧾 Zu Rechnung konvertieren
-                        </button>
-                        <button class="new-btn" onclick="resetForm()">+ Neues Dokument</button>
+                 <div class="result-actions">
+                    <a id="download-btn" href="#" class="download-btn">⬇️ PDF herunterladen</a>
+                    <button id="convert-btn" class="convert-btn" style="display:none" onclick="convertToInvoice()">
+                        🧾 Zu Rechnung konvertieren
+                    </button>
+                    <button class="new-btn" onclick="resetForm()">+ Neues Dokument</button>
+                </div>
+
+                <!-- Email Section -->
+                <div class="email-section">
+                    <p class="result-label">📧 Direkt per E-Mail senden:</p>
+                    <div class="email-row">
+                        <input type="email" id="customer-email" placeholder="kunde@email.de">
+                        <button class="email-btn" onclick="sendEmail()">Senden</button>
                     </div>
+                    <p id="email-status" class="email-status"></p>
+                </div>
                 </div>
             </div>
 

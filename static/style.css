@@ -744,3 +744,49 @@ textarea {
     border-radius: 4px;
     transition: width 0.3s;
 }
+
+/* Email Section */
+.email-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid #1e1e1e;
+}
+
+.email-row {
+    display: flex;
+    gap: 10px;
+}
+
+.email-row input {
+    flex: 1;
+}
+
+.email-btn {
+    background: #2f6feb;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.email-btn:hover {
+    background: #1a56d6;
+}
+
+.email-status {
+    font-size: 0.82rem;
+    color: #555;
+}
+
+@media (max-width: 768px) {
+    .email-row {
+        flex-direction: column;
+    }
+}
