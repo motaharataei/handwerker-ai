@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HandwerkerAI — Registrieren</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #080808;
+            color: #e8e8e8;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            background: #111111;
+            border: 1px solid #1e1e1e;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .card-sub {
+            font-size: 0.88rem;
+            color: #555;
+            text-align: center;
+            margin-top: -16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        input {
+            background: #0a0a0a;
+            border: 1px solid #2a2a2a;
+            color: #e8e8e8;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border 0.2s;
+            width: 100%;
+        }
+
+        input:focus {
+            border-color: #444;
+        }
+
+        .btn {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 13px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover { background: #e0e0e0; }
+
+        .btn:disabled {
+            background: #1e1e1e;
+            color: #444;
+            cursor: not-allowed;
+        }
+
+        .error {
+            background: rgba(255,68,68,0.1);
+            border: 1px solid rgba(255,68,68,0.2);
+            color: #ff6b6b;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .success {
+            background: rgba(76,175,80,0.1);
+            border: 1px solid rgba(76,175,80,0.2);
+            color: #4caf50;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #333;
+            font-size: 0.82rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-top: 1px solid #1e1e1e;
+        }
+
+        .link-btn {
+            background: transparent;
+            border: 1px solid #2a2a2a;
+            color: #888;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .link-btn:hover {
+            background: #1a1a1a;
+            color: #e8e8e8;
+        }
+
+        .terms {
+            font-size: 0.78rem;
+            color: #444;
+            text-align: center;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">⚡ HandwerkerAI</div>
+        <div>
+            <div class="card-title">Konto erstellen</div>
+            <div class="card-sub">Kostenlos starten — keine Kreditkarte nötig</div>
+        </div>
+
+        <div class="form-group">
+            <label>E-Mail</label>
+            <input type="email" id="email" placeholder="deine@email.de">
+        </div>
+
+        <div class="form-group">
+            <label>Passwort</label>
+            <input type="password" id="password" placeholder="Mindestens 6 Zeichen">
+        </div>
+
+        <div class="form-group">
+            <label>Passwort bestätigen</label>
+            <input type="password" id="password2" placeholder="Passwort wiederholen"
+                onkeydown="if(event.key==='Enter') register()">
+        </div>
+
+        <div class="error" id="error"></div>
+        <div class="success" id="success"></div>
+
+        <button class="btn" id="register-btn" onclick="register()">
+            Kostenlos registrieren
+        </button>
+
+        <div class="terms">
+            Mit der Registrierung stimmst du unseren
+            Nutzungsbedingungen zu.
+        </div>
+
+        <div class="divider">oder</div>
+
+        <a href="/login" class="link-btn">
+            Bereits ein Konto? Jetzt anmelden
+        </a>
+
+        <a href="/" style="border:none;color:#333;font-size:0.8rem;text-align:center;text-decoration:none;display:block;">
+            ← Zurück zur Startseite
+        </a>
+    </div>
+
+    <script>
+        async function register() {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const password2 = document.getElementById('password2').value;
+            const error = document.getElementById('error');
+            const success = document.getElementById('success');
+            const btn = document.getElementById('register-btn');
+
+            error.style.display = 'none';
+            success.style.display = 'none';
+
+            if (!email || !password || !password2) {
+                error.textContent = 'Bitte alle Felder ausfüllen.';
+                error.style.display = 'block';
+                return;
+            }
+
+            if (password !== password2) {
+                error.textContent = 'Passwörter stimmen nicht überein.';
+                error.style.display = 'block';
+                return;
+            }
+
+            if (password.length < 6) {
+                error.textContent = 'Passwort muss mindestens 6 Zeichen haben.';
+                error.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Registrieren...';
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    success.textContent = '✅ Konto erstellt! Weiterleitung...';
+                    success.style.display = 'block';
+                    setTimeout(() => window.location.href = '/app', 1000);
+                } else {
+                    error.textContent = data.error;
+                    error.style.display = 'block';
+                }
+            } catch (e) {
+                error.textContent = 'Verbindungsfehler. Bitte erneut versuchen.';
+                error.style.display = 'block';
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Kostenlos registrieren';
+        }
+    </script>
+</body>
+</html>

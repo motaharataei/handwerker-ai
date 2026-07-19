@@ -4,3 +4,5 @@ python-dotenv
 reportlab
 gunicorn
 stripe
+flask-login
+werkzeug
